@@ -11,10 +11,24 @@ if(NOT verilator_FOUND)
     )
 endif()
 
+# Find SDL2
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SDL2 REQUIRED sdl2)
+if(NOT SDL2_FOUND)
+    message(FATAL_ERROR "SDL2 was not found")
+endif()
+
 add_executable(playground main.cpp)
 target_compile_features(playground PUBLIC cxx_std_14)
+
+# Link SDL2
+target_include_directories(playground PRIVATE ${SDL2_INCLUDE_DIRS})
+target_link_libraries(playground PRIVATE ${SDL2_LIBRARIES})
+target_compile_options(playground PRIVATE ${SDL2_CFLAGS_OTHER})
+
 verilate(playground
-        SOURCES verilog/video_sync_generator.v
-        TRACE
+        SOURCES verilog/video_sync_generator.v verilog/video_test_pattern.v
+        PREFIX Vvideo_test_pattern
+        TRACE_VCD
         TRACE_STRUCTS
 )
