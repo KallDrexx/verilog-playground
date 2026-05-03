@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    Uint8* pixels = new Uint8[256 * 240 * 3];
+    auto* pixels = new Uint8[256 * 240 * 3];
     for (int i = 0; i < 256 * 240 * 3; i++) {
         pixels[i] = 0;
     }
@@ -89,6 +89,13 @@ int main(int argc, char **argv) {
 
     while (running) {
         while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_KEYUP) {
+                if (e.key.keysym.sym == SDLK_ESCAPE) {
+                    running = false;
+                    continue;
+                }
+            }
+
             if (e.type == SDL_QUIT) {
                 running = false;
             }
