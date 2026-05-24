@@ -1,3 +1,5 @@
+`include "video_sync_generator.v"
+
 module video_test_pattern (
     input clk,
     input reset,
