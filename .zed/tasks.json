@@ -1,0 +1,6 @@
+[
+  {
+    "label": "Run Sim (Test Pattern)",
+    "command": "make sim_test_pattern",
+  },
+]

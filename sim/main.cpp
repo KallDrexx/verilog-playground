@@ -3,6 +3,10 @@
 #include "verilated.h"
 #include "Vvideo_test_pattern.h"
 
+int WIDTH_PIXELS = 640;
+int HEIGHT_PIXELS = 480;
+double SCALE = 1.5;
+
 void simulateFrame(Vvideo_test_pattern* testPattern, Uint8* pixels, int& pixelX, int& pixelY) {
     // Run full frame simulation until vsync goes high
     while (testPattern->vsync == 0) {
@@ -10,18 +14,18 @@ void simulateFrame(Vvideo_test_pattern* testPattern, Uint8* pixels, int& pixelX,
         testPattern->eval();
 
         if (testPattern->clk == 1 && testPattern->display_on == 1) {
-            int pixelIndex = (pixelY * 256 + pixelX) * 3;
-            if (pixelIndex >= 0 && pixelIndex < 256 * 240 * 3) {
+            int pixelIndex = (pixelY * WIDTH_PIXELS + pixelX) * 3;
+            if (pixelIndex >= 0 && pixelIndex < WIDTH_PIXELS * HEIGHT_PIXELS * 3) {
                 pixels[pixelIndex] = testPattern->red;
                 pixels[pixelIndex + 1] = testPattern->green;
                 pixels[pixelIndex + 2] = testPattern->blue;
             }
 
             pixelX++;
-            if (pixelX >= 256) {
+            if (pixelX >= WIDTH_PIXELS) {
                 pixelX = 0;
                 pixelY++;
-                if (pixelY >= 240) {
+                if (pixelY >= HEIGHT_PIXELS) {
                     pixelY = 0;
                 }
             }
@@ -44,7 +48,7 @@ int main(int argc, char **argv) {
     SDL_Window* window = SDL_CreateWindow("Verilog Playground",
                                         SDL_WINDOWPOS_UNDEFINED,
                                         SDL_WINDOWPOS_UNDEFINED,
-                                        800, 600,
+                                        WIDTH_PIXELS * SCALE, HEIGHT_PIXELS * SCALE,
                                         SDL_WINDOW_SHOWN);
     if (window == nullptr) {
         printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
@@ -60,7 +64,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, 256, 240);
+    SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, 640, 480);
     if (texture == nullptr) {
         printf("SDL_CreateTexture Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(renderer);
@@ -69,8 +73,8 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    auto* pixels = new Uint8[256 * 240 * 3];
-    for (int i = 0; i < 256 * 240 * 3; i++) {
+    auto* pixels = new Uint8[WIDTH_PIXELS * HEIGHT_PIXELS * 3];
+    for (int i = 0; i < WIDTH_PIXELS * HEIGHT_PIXELS * 3; i++) {
         pixels[i] = 0;
     }
 
@@ -104,7 +108,7 @@ int main(int argc, char **argv) {
         simulateFrame(testPattern, pixels, pixelX, pixelY);
 
         // Display the completed frame
-        SDL_UpdateTexture(texture, nullptr, pixels, 256 * 3);
+        SDL_UpdateTexture(texture, nullptr, pixels, WIDTH_PIXELS * 3);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, texture, nullptr, nullptr);

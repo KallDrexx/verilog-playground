@@ -51,7 +51,7 @@ module video_test_pattern (
     output [7:0] blue
 );
 
-    wire [8:0] hpos, vpos;
+    wire [9:0] hpos, vpos;
 
     video_sync_generator sync_gen (
         .clk(clk),
@@ -65,6 +65,6 @@ module video_test_pattern (
 
     assign red = display_on && hpos[4] ? 8'hFF : 8'h00;
     assign green = display_on && vpos[4] ? 8'hFF : 8'h00;
-    assign blue = display_on && (hpos == 0 || hpos == 255 || vpos == 0 || vpos == 239) ? 8'hFF : 8'h00;
+    assign blue = display_on && (hpos == 0 || hpos == 639 || vpos == 0 || vpos == 479) ? 8'hFF : 8'h00;
 
 endmodule

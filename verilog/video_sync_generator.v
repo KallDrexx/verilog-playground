@@ -3,19 +3,19 @@ module video_sync_generator (
     input reset,
     output reg hsync, vsync,
     output display_on,
-    output reg [8:0] hpos, // 0,0 position is the top left of the displayable area
-    output reg [8:0] vpos
+    output reg [9:0] hpos, // 0,0 position is the top left of the displayable area
+    output reg [9:0] vpos
 );
 
-    localparam H_BACK = 23; // back porch
-    localparam H_FRONT = 7; // front porch
-    localparam H_SYNC = 23; // horizontal sync time
-    localparam H_DISP = 256; // vertical displayed area
+    localparam H_BACK = 50; // back porch
+    localparam H_FRONT = 18; // front porch
+    localparam H_SYNC = 92; // horizontal sync time
+    localparam H_DISP = 640; // horizontal displayed area
 
-    localparam V_TOP = 5; // vertical blank top
-    localparam V_BOTTOM = 14; // vertical blank bottom
-    localparam V_DISP = 240; // vertical displayed area
-    localparam V_SYNC = 3; // vertical sync
+    localparam V_TOP = 33; // vertical blank top
+    localparam V_BOTTOM = 10; // vertical blank bottom
+    localparam V_DISP = 480; // vertical displayed area
+    localparam V_SYNC = 2; // vertical sync
 
     localparam H_SYNC_START = H_DISP + H_FRONT;
     localparam H_SYNC_END = H_SYNC_START + H_SYNC - 1;
