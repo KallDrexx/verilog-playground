@@ -18,6 +18,8 @@ if(NOT SDL2_FOUND)
     message(FATAL_ERROR "SDL2 was not found")
 endif()
 
+set(VERILOG_FOLDER ../verilog)
+
 add_executable(playground main.cpp)
 target_compile_features(playground PUBLIC cxx_std_14)
 
@@ -27,8 +29,10 @@ target_link_libraries(playground PRIVATE ${SDL2_LIBRARIES})
 target_compile_options(playground PRIVATE ${SDL2_CFLAGS_OTHER})
 
 verilate(playground
-        SOURCES verilog/video_sync_generator.v verilog/video_test_pattern.v
+        SOURCES ${VERILOG_FOLDER}/video_sync_generator.v ${VERILOG_FOLDER}/video_test_pattern.v
         PREFIX Vvideo_test_pattern
         TRACE_VCD
         TRACE_STRUCTS
 )
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
