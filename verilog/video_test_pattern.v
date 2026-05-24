@@ -2,7 +2,6 @@
 
 module nandland_go_video_test_pattern (
     input i_Clk,
-    input i_Switch_1, // Reset
     output o_VGA_HSync,
     output o_VGA_VSync,
     output o_VGA_Red_0,
@@ -21,7 +20,6 @@ module nandland_go_video_test_pattern (
 
     video_test_pattern test_pattern (
         .clk(i_Clk),
-        .reset(i_Switch_1),
         .hsync(o_VGA_HSync),
         .vsync(o_VGA_VSync),
         .red(red),
