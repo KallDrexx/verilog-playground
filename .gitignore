@@ -3,11 +3,13 @@ cmake-*/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-playground
 
 .cmake/
 .ninja_deps
 .ninja_log
 Testing/
 build.ninja
+
+abc.history
+out/
 

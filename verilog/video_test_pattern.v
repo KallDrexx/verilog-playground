@@ -1,5 +1,48 @@
 `include "video_sync_generator.v"
 
+module nandland_go_video_test_pattern (
+    input i_Clk,
+    input i_Switch_1, // Reset
+    output o_VGA_HSync,
+    output o_VGA_VSync,
+    output o_VGA_Red_0,
+    output o_VGA_Red_1,
+    output o_VGA_Red_2,
+    output o_VGA_Grn_0,
+    output o_VGA_Grn_1,
+    output o_VGA_Grn_2,
+    output o_VGA_Blu_0,
+    output o_VGA_Blu_1,
+    output o_VGA_Blu_2
+);
+    wire [7:0] red;
+    wire [7:0] green;
+    wire [7:0] blue;
+
+    video_test_pattern test_pattern (
+        .clk(i_Clk),
+        .reset(i_Switch_1),
+        .hsync(o_VGA_HSync),
+        .vsync(o_VGA_VSync),
+        .red(red),
+        .green(green),
+        .blue(blue)
+    );
+
+    assign o_VGA_Red_2 = red[7];
+    assign o_VGA_Red_1 = red[6];
+    assign o_VGA_Red_0 = red[5];
+
+    assign o_VGA_Grn_2 = green[7];
+    assign o_VGA_Grn_1 = green[6];
+    assign o_VGA_Grn_0 = green[5];
+
+    assign o_VGA_Blu_2 = blue[7];
+    assign o_VGA_Blu_1 = blue[6];
+    assign o_VGA_Blu_0 = blue[5];
+
+endmodule
+
 module video_test_pattern (
     input clk,
     input reset,
