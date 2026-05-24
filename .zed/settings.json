@@ -6,4 +6,11 @@
   "languages": {
     "SystemVerilog": {},
   },
+  "lsp": {
+    "clangd": {
+      "binary": {
+        "arguments": ["--compile-commands-dir=sim/cmake-build-debug"],
+      },
+    },
+  },
 }

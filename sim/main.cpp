@@ -16,7 +16,7 @@ void simulateFrame(Vvideo_test_pattern* testPattern, Uint8* pixels, int& pixelX,
                 pixels[pixelIndex + 1] = testPattern->green;
                 pixels[pixelIndex + 2] = testPattern->blue;
             }
-            
+
             pixelX++;
             if (pixelX >= 256) {
                 pixelX = 0;
@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
     testPattern->reset = 1;
     testPattern->eval();
     testPattern->reset = 0;
-    
+
     int pixelX = 0;
     int pixelY = 0;
 
@@ -102,17 +102,17 @@ int main(int argc, char **argv) {
         }
 
         simulateFrame(testPattern, pixels, pixelX, pixelY);
-        
+
         // Display the completed frame
         SDL_UpdateTexture(texture, nullptr, pixels, 256 * 3);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, texture, nullptr, nullptr);
         SDL_RenderPresent(renderer);
-        
+
         pixelX = 0;
         pixelY = 0;
-        
+
         SDL_Delay(16);
     }
 
