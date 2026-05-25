@@ -1,46 +1,12 @@
+#include <cstdint>
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include "runner.h"
 #include "verilated.h"
-#include "Vvideo_test_pattern.h"
 
-int WIDTH_PIXELS = 640;
-int HEIGHT_PIXELS = 480;
+uint16_t WIDTH_PIXELS = 640;
+uint16_t HEIGHT_PIXELS = 480;
 double SCALE = 1.5;
-
-void simulateFrame(Vvideo_test_pattern* testPattern, Uint8* pixels) {
-    int pixelX = 0;
-    int pixelY = 0;
-
-    // Run full frame simulation until vsync goes high
-    while (testPattern->vsync == 0) {
-        testPattern->clk = !testPattern->clk;
-        testPattern->eval();
-
-        if (testPattern->clk == 1 && testPattern->display_on == 1) {
-            int pixelIndex = (pixelY * WIDTH_PIXELS + pixelX) * 3;
-            if (pixelIndex >= 0 && pixelIndex < WIDTH_PIXELS * HEIGHT_PIXELS * 3) {
-                pixels[pixelIndex] = testPattern->red;
-                pixels[pixelIndex + 1] = testPattern->green;
-                pixels[pixelIndex + 2] = testPattern->blue;
-            }
-
-            pixelX++;
-            if (pixelX >= WIDTH_PIXELS) {
-                pixelX = 0;
-                pixelY++;
-                if (pixelY >= HEIGHT_PIXELS) {
-                    pixelY = 0;
-                }
-            }
-        }
-    }
-
-    // Continue toggling clock while vsync is high
-    while (testPattern->vsync == 1) {
-        testPattern->clk = !testPattern->clk;
-        testPattern->eval();
-    }
-}
 
 int main(int argc, char **argv) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -76,20 +42,16 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    auto* pixels = new Uint8[WIDTH_PIXELS * HEIGHT_PIXELS * 3];
+    auto* pixels = new uint8_t[WIDTH_PIXELS * HEIGHT_PIXELS * 3];
     for (int i = 0; i < WIDTH_PIXELS * HEIGHT_PIXELS * 3; i++) {
         pixels[i] = 0;
     }
 
     Verilated::commandArgs(argc, argv);
-    const auto testPattern = new Vvideo_test_pattern;
+    runner_initialize();
 
     bool running = true;
     SDL_Event e;
-    testPattern->clk = 0;
-    testPattern->reset = 1;
-    testPattern->eval();
-    testPattern->reset = 0;
 
     while (running) {
         while (SDL_PollEvent(&e)) {
@@ -105,7 +67,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        simulateFrame(testPattern, pixels);
+        runner_simulate_frame(WIDTH_PIXELS, HEIGHT_PIXELS, pixels);
 
         // Display the completed frame
         SDL_UpdateTexture(texture, nullptr, pixels, WIDTH_PIXELS * 3);
@@ -117,7 +79,7 @@ int main(int argc, char **argv) {
     }
 
     delete[] pixels;
-    delete testPattern;
+    runner_cleanup();
 
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
