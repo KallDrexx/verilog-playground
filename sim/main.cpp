@@ -7,7 +7,10 @@ int WIDTH_PIXELS = 640;
 int HEIGHT_PIXELS = 480;
 double SCALE = 1.5;
 
-void simulateFrame(Vvideo_test_pattern* testPattern, Uint8* pixels, int& pixelX, int& pixelY) {
+void simulateFrame(Vvideo_test_pattern* testPattern, Uint8* pixels) {
+    int pixelX = 0;
+    int pixelY = 0;
+
     // Run full frame simulation until vsync goes high
     while (testPattern->vsync == 0) {
         testPattern->clk = !testPattern->clk;
@@ -88,9 +91,6 @@ int main(int argc, char **argv) {
     testPattern->eval();
     testPattern->reset = 0;
 
-    int pixelX = 0;
-    int pixelY = 0;
-
     while (running) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_KEYUP) {
@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        simulateFrame(testPattern, pixels, pixelX, pixelY);
+        simulateFrame(testPattern, pixels);
 
         // Display the completed frame
         SDL_UpdateTexture(texture, nullptr, pixels, WIDTH_PIXELS * 3);
@@ -113,10 +113,6 @@ int main(int argc, char **argv) {
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, texture, nullptr, nullptr);
         SDL_RenderPresent(renderer);
-
-        pixelX = 0;
-        pixelY = 0;
-
         SDL_Delay(16);
     }
 
