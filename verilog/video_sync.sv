@@ -20,13 +20,17 @@ module video_sync(
 
   localparam bit [9:0] HBlankTotal = H_FRONT_PORCH + H_BACK_PORCH + H_SYNC;
   localparam bit [9:0] HTotal = HBlankTotal + H_ACTIVE_PIXELS;
+  localparam bit [9:0] HSyncStart = H_ACTIVE_PIXELS + H_FRONT_PORCH;
+  localparam bit [9:0] HSyncEnd = HSyncStart + H_SYNC;
 
   localparam bit [9:0] VBlankeTotal = V_FRONT_PORCH + V_BACK_PORCH + V_SYNC;
   localparam bit [9:0] VTotal = VBlankeTotal + V_ACTIVE_PIXELS;
+  localparam bit [9:0] VSyncStart = V_ACTIVE_PIXELS + V_FRONT_PORCH;
+  localparam bit [9:0] VSyncEnd = VSyncStart + V_SYNC;
 
-  assign hsync = hpos >= H_ACTIVE_PIXELS;
-  assign vsync = vpos >= V_ACTIVE_PIXELS;
-  assign display_on = !hsync && !vsync && !reset;
+  assign hsync = hpos >= HSyncStart && hpos < HSyncEnd;
+  assign vsync = vpos >= VSyncStart && vpos < VSyncEnd;
+  assign display_on = hpos < H_ACTIVE_PIXELS && vpos < V_ACTIVE_PIXELS;
 
   always @(posedge clk) begin
     if (reset) begin
