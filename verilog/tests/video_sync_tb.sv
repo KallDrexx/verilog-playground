@@ -1,4 +1,4 @@
-`include "video_sync.sv"
+`include "../video_sync.sv"
 
 module video_sync_tb();
   reg currentReset;
@@ -19,22 +19,26 @@ module video_sync_tb();
     .vpos(vpos)
   );
 
-  initial begin
+  always #5 currentClock = ~currentClock;
+
+  initial begin : main_tb
     $dumpfile("dump.vcd"); $dumpvars;
+
     currentReset <= 1'b1;
     currentClock <= 1'b1;
-    #10
+    #5
     currentReset <= 1'b0;
     currentClock <= 1'b0;
-    #10
-    currentClock <= 1'b1;
-    #10
-    currentClock <= 1'b0;
-    #10
-    currentClock <= 1'b1;
-    #10
-    $finish();
+    #5
 
+    repeat (10) @(posedge currentClock);
+    assert (hpos == 11)
+    else begin
+      $error("hpos was not 10 after 10 clock cycles");
+      $finish();
+    end
+
+    $finish();
   end
 
 endmodule
