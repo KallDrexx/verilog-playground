@@ -1,4 +1,14 @@
-module video_sync(
+module video_sync #(
+  parameter bit [9:0] H_ACTIVE_PIXELS,
+  parameter bit [9:0] H_FRONT_PORCH,
+  parameter bit [9:0] H_BACK_PORCH,
+  parameter bit [9:0] H_SYNC,
+
+  parameter bit [9:0] V_ACTIVE_PIXELS,
+  parameter bit [9:0] V_FRONT_PORCH,
+  parameter bit [9:0] V_BACK_PORCH,
+  parameter bit [9:0] V_SYNC
+) (
   input wire clk,
   input wire reset,
   output wire hsync,
@@ -7,16 +17,6 @@ module video_sync(
   output reg [9:0] hpos,
   output reg [9:0] vpos
 );
-
-  parameter bit [9:0] H_ACTIVE_PIXELS = 640;
-  parameter bit [9:0] H_FRONT_PORCH = 16;
-  parameter bit [9:0] H_BACK_PORCH = 48;
-  parameter bit [9:0] H_SYNC = 96;
-
-  parameter bit [9:0] V_ACTIVE_PIXELS = 480;
-  parameter bit [9:0] V_FRONT_PORCH = 10;
-  parameter bit [9:0] V_BACK_PORCH = 33;
-  parameter bit [9:0] V_SYNC = 2;
 
   localparam bit [9:0] HBlankTotal = H_FRONT_PORCH + H_BACK_PORCH + H_SYNC;
   localparam bit [9:0] HTotal = HBlankTotal + H_ACTIVE_PIXELS;

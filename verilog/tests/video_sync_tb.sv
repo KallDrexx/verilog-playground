@@ -9,7 +9,16 @@ module video_sync_tb();
   wire [9:0] hpos;
   wire [9:0] vpos;
 
-  video_sync DUT(
+  video_sync #(
+    .H_ACTIVE_PIXELS(20),
+    .H_FRONT_PORCH(1),
+    .H_BACK_PORCH(2),
+    .H_SYNC(3),
+    .V_ACTIVE_PIXELS(30),
+    .V_BACK_PORCH(4),
+    .V_FRONT_PORCH(5),
+    .V_SYNC(6)
+    ) DUT (
     .clk(currentClock),
     .reset(currentReset),
     .hsync(hsync),
@@ -22,7 +31,7 @@ module video_sync_tb();
   always #5 currentClock = ~currentClock;
 
   initial begin : main_tb
-    $dumpfile("dump.vcd"); $dumpvars;
+    $dumpfile("video_sync_tb.vcd"); $dumpvars;
 
     currentReset <= 1'b1;
     currentClock <= 1'b1;
@@ -32,12 +41,13 @@ module video_sync_tb();
     #5
 
     repeat (10) @(posedge currentClock);
-    assert (hpos == 11)
+    assert (hpos == 10)
     else begin
-      $error("hpos was not 10 after 10 clock cycles");
+      $error("Expected hpos to be 10 after 10 cycles, but was %0d", hpos);
       $finish();
     end
 
+    $display("%m: Test Success");
     $finish();
   end
 
