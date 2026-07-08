@@ -20,11 +20,13 @@ module video_sync #(
 
   localparam bit [9:0] HBlankTotal = H_FRONT_PORCH + H_BACK_PORCH + H_SYNC;
   localparam bit [9:0] HTotal = HBlankTotal + H_ACTIVE_PIXELS;
+  localparam bit [9:0] HMax = HTotal - 1;
   localparam bit [9:0] HSyncStart = H_ACTIVE_PIXELS + H_FRONT_PORCH;
   localparam bit [9:0] HSyncEnd = HSyncStart + H_SYNC;
 
   localparam bit [9:0] VBlankeTotal = V_FRONT_PORCH + V_BACK_PORCH + V_SYNC;
   localparam bit [9:0] VTotal = VBlankeTotal + V_ACTIVE_PIXELS;
+  localparam bit [9:0] VMax = VTotal - 1;
   localparam bit [9:0] VSyncStart = V_ACTIVE_PIXELS + V_FRONT_PORCH;
   localparam bit [9:0] VSyncEnd = VSyncStart + V_SYNC;
 
@@ -37,9 +39,9 @@ module video_sync #(
       hpos <= 0;
       vpos <= 0;
     end else begin
-      if (hpos >= HTotal) begin
+      if (hpos >= HMax) begin
         hpos <= 0;
-        if (vpos >= VTotal - 1) begin
+        if (vpos >= VMax) begin
           vpos <= 0;
         end else begin
           vpos <= vpos + 1;
@@ -52,4 +54,3 @@ module video_sync #(
   end
 
 endmodule
-

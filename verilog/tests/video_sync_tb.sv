@@ -93,8 +93,6 @@ module video_sync_tb();
     // Next cycle should be on the next vertical line
     `CHECK_DISPLAY(0, 1, 1, 0, 0);
 
-
-
     $display("%m: Test Success");
     $finish;
   end
