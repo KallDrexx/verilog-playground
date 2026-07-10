@@ -46,10 +46,11 @@ module video_sync_tb();
             hsync == exp_hsync &&
             vsync == exp_vsync)
     else begin
-      $error("(%s:%0d) - hpos %0d/%0d, vpos %0d/%0d, display_on %0d/%0d, hsync %0d/%0d, vsync %0d/%0d",
-            file, line,
-            hpos, exp_hpos, vpos, exp_vpos, display_on, exp_display_on,
-            hsync, exp_hsync, vsync, exp_vsync);
+      $error(
+        "(%s:%0d) - hpos %0d/%0d, vpos %0d/%0d, display_on %0d/%0d, hsync %0d/%0d, vsync %0d/%0d",
+        file, line,
+        hpos, exp_hpos, vpos, exp_vpos, display_on, exp_display_on,
+        hsync, exp_hsync, vsync, exp_vsync);
       $finish;
     end
   endtask
