@@ -13,11 +13,7 @@ if(NOT verilator_FOUND)
 endif()
 
 # Find SDL2
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(SDL2 REQUIRED sdl2)
-if(NOT SDL2_FOUND)
-  message(FATAL_ERROR "SDL2 was not found")
-endif()
+find_package(SDL2 REQUIRED COMPONENTS SDL2)
 
 set(VERILOG_FOLDER ../verilog)
 
@@ -25,9 +21,9 @@ add_executable(test_pattern main.cpp runners/test_pattern_runner.cpp)
 target_compile_features(test_pattern PUBLIC cxx_std_14)
 
 # Link SDL2
-target_include_directories(test_pattern PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(test_pattern PRIVATE ${SDL2_LIBRARIES})
-target_compile_options(test_pattern PRIVATE ${SDL2_CFLAGS_OTHER})
+target_include_directories(test_pattern PRIVATE)
+target_link_libraries(test_pattern PRIVATE SDL2::SDL2)
+target_compile_options(test_pattern PRIVATE )
 
 verilate(test_pattern
         SOURCES ${VERILOG_FOLDER}/video_test_pattern.v
